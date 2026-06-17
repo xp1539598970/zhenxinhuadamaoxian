@@ -1,20 +1,20 @@
 <!-- index.wxml -->
 <view class="container">
   <view class="logo-section">
-    <view class="logo">🎲</view>
+    <image class="logo-image" src="../../images/hellokitty-logo.png" mode="aspectFit"></image>
     <view class="title">真心话大冒险</view>
     <view class="subtitle">聚会必备 · 快乐无限</view>
   </view>
 
   <view class="buttons-section">
     <button class="main-btn create-btn" bindtap="onCreateRoom">
-      <view class="btn-icon">✨</view>
+      <view class="btn-icon">🎀</view>
       <view class="btn-text">创建房间</view>
       <view class="btn-desc">开启新游戏</view>
     </button>
 
     <button class="main-btn join-btn" bindtap="onJoinRoom">
-      <view class="btn-icon">🚪</view>
+      <view class="btn-icon">�</view>
       <view class="btn-text">加入房间</view>
       <view class="btn-desc">输入房间号</view>
     </button>

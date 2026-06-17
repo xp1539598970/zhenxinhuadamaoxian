@@ -22,8 +22,10 @@
         wx:key="_id"
         class="player-card {{item.isOwner ? 'owner' : ''}} {{item.isCurrent ? 'current' : ''}}"
       >
-        <image class="player-avatar" src="{{item.avatarUrl || '../../images/avatar.png'}}" mode="aspectFill"></image>
-        <view class="player-name">{{item.nickName}}</view>
+        <view class="player-avatar-wrapper">
+          <text class="player-avatar-emoji">🐱</text>
+        </view>
+        <view class="player-name" title="{{item.displayName}}">{{item.displayName}}</view>
         <view class="player-tag" wx:if="{{item.isOwner}}">房主</view>
         <view class="player-tag current-tag" wx:if="{{item.isCurrent}}">当前</view>
       </view>
@@ -31,31 +33,101 @@
     <view class="players-count">{{playerCount}}/{{maxPlayers}}人</view>
   </view>
 
-  <view class="question-section" wx:if="{{gameStatus === 'playing' && currentQuestion}}">
-    <view class="question-header">
-      <view class="question-type {{currentQuestion.type === 'truth' ? 'truth' : 'dare'}}">
-        {{currentQuestion.type === 'truth' ? '真心话' : '大冒险'}}
+  <view class="question-section" wx:if="{{gameStatus === 'playing'}}">
+    <block wx:if="{{currentQuestion && currentQuestion.content}}">
+      <view class="question-header">
+        <view class="question-type {{currentQuestion.type === 'truth' ? 'truth' : 'dare'}}">
+          {{currentQuestion.type === 'truth' ? '真心话' : '大冒险'}}
+        </view>
+        <view class="question-difficulty" wx:if="{{!currentQuestion.isCustom}}">
+          {{currentQuestion.difficulty === 1 ? '简单' : currentQuestion.difficulty === 2 ? '中等' : '困难'}}
+        </view>
+        <view class="question-difficulty custom-tag" wx:if="{{currentQuestion.isCustom}}">
+          自定义
+        </view>
       </view>
-      <view class="question-difficulty" wx:if="{{!currentQuestion.isCustom}}">
-        {{currentQuestion.difficulty === 1 ? '简单' : currentQuestion.difficulty === 2 ? '中等' : '困难'}}
+      <view class="question-content">{{currentQuestion.content}}</view>
+      <view class="question-meta" wx:if="{{currentQuestion.isCustom}}">
+        <text>{{currentQuestion.fromPlayer}} 提问 {{currentQuestion.targetPlayer}}</text>
       </view>
-      <view class="question-difficulty custom-tag" wx:if="{{currentQuestion.isCustom}}">
-        自定义
+
+      <!-- 回答状态提示 -->
+      <view class="answer-status-bar" wx:if="{{answerStatus === 'typing'}}">
+        <view class="typing-dots">
+          <view class="typing-dot"></view>
+          <view class="typing-dot"></view>
+          <view class="typing-dot"></view>
+        </view>
+        <text class="typing-text">{{typingPlayer}} 正在输入...</text>
       </view>
-    </view>
-    <view class="question-content">{{currentQuestion.content}}</view>
-    <view class="question-meta" wx:if="{{currentQuestion.isCustom}}">
-      <text>{{currentQuestion.fromPlayer}} 提问 {{currentQuestion.targetPlayer}}</text>
-    </view>
-    <view class="question-actions">
-      <button class="action-btn skip-btn" bindtap="onSkipQuestion">换一题</button>
-      <button class="action-btn ask-btn" bindtap="onShowAskModal">自定义提问</button>
-      <button class="action-btn next-btn" bindtap="onNextPlayer">下一位</button>
-    </view>
+      <view class="answer-status-bar submitted-bar" wx:if="{{answerStatus === 'submitted' && currentAnswer}}">
+        <text class="submitted-icon">✅</text>
+        <text class="submitted-text">{{currentAnswer.fromPlayer}} 已提交回答</text>
+      </view>
+
+      <!-- 回答输入区（当前回合玩家可见） -->
+      <view class="answer-input-section" wx:if="{{isCurrentPlayer && answerStatus !== 'submitted'}}">
+        <view class="answer-input-label"> 写下你的回答</view>
+        <textarea
+          class="answer-textarea"
+          placeholder="请输入你的回答..."
+          value="{{answerContent}}"
+          bindinput="onAnswerInput"
+          bindfocus="onAnswerFocus"
+          maxlength="500"
+          auto-height="{{false}}"
+          show-confirm-bar="{{false}}"
+          adjust-position="{{true}}"
+        />
+        <view class="answer-input-footer">
+          <view class="char-count {{answerContent.length >= 400 ? 'warning' : ''}}">
+            {{answerContent.length}}/500
+          </view>
+          <view class="answer-submit-btn {{answerContent.trim() ? '' : 'disabled'}}" bindtap="onSubmitAnswer">
+            提交回答
+          </view>
+        </view>
+      </view>
+
+      <!-- 等待回答提示（非当前玩家可见） -->
+      <view class="answer-waiting-hint" wx:if="{{!isCurrentPlayer && answerStatus !== 'submitted'}}">
+        <text class="waiting-emoji">⏳</text>
+        <text class="waiting-hint-text">等待 {{currentPlayerName}} 回答...</text>
+      </view>
+
+      <!-- 已提交的回答展示（所有人可见） -->
+      <view class="answer-display-section" wx:if="{{currentAnswer && answerStatus === 'submitted'}}">
+        <view class="answer-display-header">
+          <view class="answer-display-label">📝 回答内容</view>
+          <view class="answer-display-time">{{answerDisplayTime}}</view>
+        </view>
+        <view class="answer-display-content">{{currentAnswer.content}}</view>
+        <view class="answer-display-footer">
+          <text class="answer-from">— {{currentAnswer.fromPlayer}}</text>
+        </view>
+      </view>
+
+      <view class="question-actions">
+        <view class="action-btn skip-btn" bindtap="onSkipQuestion">换一题</view>
+        <view class="action-btn ask-btn" bindtap="onShowAskModal">自定义提问</view>
+        <view class="action-btn next-btn" bindtap="onNextPlayer">下一位</view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="question-empty" bindtap="onSkipQuestion">
+        <view class="empty-icon">🐱</view>
+        <view class="empty-text" wx:if="{{!isLoadingQuestion}}">点击抽取题目</view>
+        <view class="empty-text" wx:else>正在抽题...</view>
+      </view>
+      <view class="question-actions">
+        <view class="action-btn skip-btn" bindtap="onSkipQuestion">抽取题目</view>
+        <view class="action-btn ask-btn" bindtap="onShowAskModal">自定义提问</view>
+      </view>
+    </block>
   </view>
 
   <view class="waiting-section" wx:if="{{gameStatus === 'waiting'}}">
-    <view class="waiting-icon"></view>
+    <image class="waiting-icon" src="../../images/hellokitty-waiting.png" mode="aspectFit"></image>
     <view class="waiting-text">等待房主开始游戏...</view>
   </view>
 
@@ -93,9 +165,9 @@
 
       <view class="modal-section">
         <view class="modal-label">选择目标玩家</view>
-        <picker mode="selector" range="{{players}}" range-key="nickName" value="{{askTargetIndex}}" bindchange="onAskTargetChange">
+        <picker mode="selector" range="{{players}}" range-key="displayName" value="{{askTargetIndex}}" bindchange="onAskTargetChange">
           <view class="form-picker">
-            {{players[askTargetIndex].nickName || '请选择'}}
+            {{players[askTargetIndex].displayName || '请选择'}}
             <text class="picker-arrow">▼</text>
           </view>
         </picker>

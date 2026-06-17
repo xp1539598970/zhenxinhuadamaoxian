@@ -9,7 +9,14 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openId = wxContext.OPENID;
   
-  const { roomCode, nickName = "玩家", avatarUrl = "" } = event;
+  const { roomCode, nickName = "", avatarUrl = "" } = event;
+
+  // 生成一个唯一默认昵称，避免多人都叫"玩家"无法区分
+  let finalNickName = (nickName || "").trim();
+  if (!finalNickName || finalNickName === "玩家") {
+    const suffix = Math.floor(Math.random() * 9000 + 1000);
+    finalNickName = "玩家" + suffix;
+  }
 
   try {
     const roomRes = await db.collection("rooms").where({ roomCode }).get();
@@ -52,7 +59,7 @@ exports.main = async (event, context) => {
       data: {
         roomId: room._id,
         openId,
-        nickName,
+        nickName: finalNickName,
         avatarUrl,
         isReady: false,
         order: players.length,

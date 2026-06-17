@@ -1,29 +1,31 @@
 /* create.wxss */
 .container {
   padding: 40rpx 30rpx;
-  background-color: #F5F0FF;
+  background: linear-gradient(180deg, #FFE4EC 0%, #FFF0F5 50%, #FFE4EC 100%);
   min-height: 100vh;
 }
 
 .form-item {
   background-color: #FFFFFF;
-  border-radius: 20rpx;
+  border-radius: 24rpx;
   padding: 30rpx;
   margin-bottom: 30rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4rpx 20rpx rgba(255, 182, 193, 0.2);
+  border: 2rpx solid #FFE4EC;
 }
 
 .form-label {
   font-size: 28rpx;
-  color: #666666;
+  color: #FF69B4;
   margin-bottom: 20rpx;
+  font-weight: bold;
 }
 
 .form-input {
   font-size: 32rpx;
-  color: #333333;
+  color: #FF69B4;
   padding: 20rpx 0;
-  border-bottom: 1rpx solid #EEEEEE;
+  border-bottom: 1rpx solid #FFE4EC;
 }
 
 .form-picker {
@@ -31,7 +33,7 @@
   justify-content: space-between;
   align-items: center;
   font-size: 32rpx;
-  color: #333333;
+  color: #FF69B4;
   padding: 20rpx 0;
 }
 
@@ -42,14 +44,14 @@
 
 .create-btn {
   margin-top: 60rpx;
-  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%);
   color: #FFFFFF;
   font-size: 34rpx;
   font-weight: bold;
   border-radius: 100rpx;
   padding: 30rpx;
   border: none;
-  box-shadow: 0 8rpx 30rpx rgba(139, 92, 246, 0.4);
+  box-shadow: 0 8rpx 30rpx rgba(255, 105, 180, 0.4);
 }
 
 .create-btn::after {

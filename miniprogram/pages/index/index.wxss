@@ -1,7 +1,7 @@
 /* index.wxss */
 .container {
   min-height: 100vh;
-  background: linear-gradient(180deg, #8B5CF6 0%, #EC4899 100%);
+  background: linear-gradient(180deg, #FFE4EC 0%, #FFF0F5 50%, #FFE4EC 100%);
   padding: 60rpx 40rpx;
 }
 
@@ -13,8 +13,9 @@
   margin-bottom: 80rpx;
 }
 
-.logo {
-  font-size: 120rpx;
+.logo-image {
+  width: 240rpx;
+  height: 240rpx;
   margin-bottom: 30rpx;
   animation: bounce 2s infinite;
 }
@@ -27,14 +28,14 @@
 .title {
   font-size: 56rpx;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #FF69B4;
   margin-bottom: 10rpx;
-  text-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.2);
+  text-shadow: 0 4rpx 20rpx rgba(255, 105, 180, 0.2);
 }
 
 .subtitle {
   font-size: 28rpx;
-  color: rgba(255, 255, 255, 0.8);
+  color: #FFB6C1;
 }
 
 .buttons-section {
@@ -50,8 +51,8 @@
   padding: 40rpx;
   display: flex;
   align-items: center;
-  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.15);
-  border: none;
+  box-shadow: 0 10rpx 40rpx rgba(255, 182, 193, 0.3);
+  border: 2rpx solid #FFE4EC;
 }
 
 .main-btn::after {
@@ -66,25 +67,25 @@
 .btn-text {
   font-size: 36rpx;
   font-weight: bold;
-  color: #333333;
+  color: #FF69B4;
 }
 
 .btn-desc {
   font-size: 24rpx;
-  color: #999999;
+  color: #FFB6C1;
   margin-top: 6rpx;
 }
 
 .create-btn {
-  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 100%);
+  background: linear-gradient(135deg, #FFE4EC 0%, #FFC0CB 100%);
 }
 
 .create-btn .btn-text {
-  color: #FFFFFF;
+  color: #FF1493;
 }
 
 .create-btn .btn-desc {
-  color: rgba(255, 255, 255, 0.8);
+  color: #FF69B4;
 }
 
 .join-btn {
@@ -92,16 +93,17 @@
 }
 
 .rules-section {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 24rpx;
   padding: 40rpx;
   backdrop-filter: blur(10px);
+  border: 2rpx solid #FFE4EC;
 }
 
 .rules-title {
   font-size: 32rpx;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #FF69B4;
   margin-bottom: 30rpx;
   text-align: center;
 }
@@ -120,7 +122,7 @@
 .rule-num {
   width: 48rpx;
   height: 48rpx;
-  background-color: rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -134,6 +136,6 @@
 
 .rule-text {
   font-size: 28rpx;
-  color: rgba(255, 255, 255, 0.9);
+  color: #FF69B4;
   line-height: 1.5;
 }

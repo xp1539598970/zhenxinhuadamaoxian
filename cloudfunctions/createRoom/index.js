@@ -13,7 +13,14 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openId = wxContext.OPENID;
   
-  const { roomName = "真心话大冒险", maxPlayers = 6, nickName = "玩家", avatarUrl = "", duration = 0 } = event;
+  const { roomName = "真心话大冒险", maxPlayers = 6, nickName = "", avatarUrl = "", duration = 0 } = event;
+
+  // 生成一个唯一默认昵称，避免多人都叫"玩家"无法区分
+  let finalNickName = (nickName || "").trim();
+  if (!finalNickName || finalNickName === "玩家") {
+    const suffix = Math.floor(Math.random() * 9000 + 1000);
+    finalNickName = "玩家" + suffix;
+  }
 
   let roomCode = generateRoomCode();
   let exists = true;
@@ -32,7 +39,7 @@ exports.main = async (event, context) => {
       roomName,
       roomCode,
       ownerOpenId: openId,
-      ownerNickName: nickName,
+      ownerNickName: finalNickName,
       ownerAvatarUrl: avatarUrl,
       maxPlayers,
       duration,
@@ -56,7 +63,7 @@ exports.main = async (event, context) => {
       data: {
         roomId,
         openId,
-        nickName,
+        nickName: finalNickName,
         avatarUrl,
         isReady: false,
         order: 0,
