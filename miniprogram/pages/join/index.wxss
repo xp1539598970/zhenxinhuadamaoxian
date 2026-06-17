@@ -1,0 +1,55 @@
+/* join.wxss */
+.container {
+  padding: 40rpx 30rpx;
+  background-color: #F5F0FF;
+  min-height: 100vh;
+}
+
+.code-section {
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.code-title {
+  font-size: 28rpx;
+  color: #666666;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.code-input-single {
+  width: 100%;
+  height: 90rpx;
+  border: 2rpx solid #EEEEEE;
+  border-radius: 16rpx;
+  text-align: center;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333333;
+  letter-spacing: 16rpx;
+  box-sizing: border-box;
+  padding: 0 20rpx;
+}
+
+.code-input-single:focus {
+  border-color: #8B5CF6;
+}
+
+.join-btn {
+  margin-top: 60rpx;
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  color: #FFFFFF;
+  font-size: 34rpx;
+  font-weight: bold;
+  border-radius: 100rpx;
+  padding: 30rpx;
+  border: none;
+  box-shadow: 0 8rpx 30rpx rgba(139, 92, 246, 0.4);
+}
+
+.join-btn::after {
+  border: none;
+}

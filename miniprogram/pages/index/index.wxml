@@ -1,0 +1,46 @@
+<!-- index.wxml -->
+<view class="container">
+  <view class="logo-section">
+    <view class="logo">🎲</view>
+    <view class="title">真心话大冒险</view>
+    <view class="subtitle">聚会必备 · 快乐无限</view>
+  </view>
+
+  <view class="buttons-section">
+    <button class="main-btn create-btn" bindtap="onCreateRoom">
+      <view class="btn-icon">✨</view>
+      <view class="btn-text">创建房间</view>
+      <view class="btn-desc">开启新游戏</view>
+    </button>
+
+    <button class="main-btn join-btn" bindtap="onJoinRoom">
+      <view class="btn-icon">🚪</view>
+      <view class="btn-text">加入房间</view>
+      <view class="btn-desc">输入房间号</view>
+    </button>
+  </view>
+
+  <view class="rules-section">
+    <view class="rules-title">游戏规则</view>
+    <view class="rules-list">
+      <view class="rule-item">
+        <view class="rule-num">1</view>
+        <view class="rule-text">房主创建房间，设置人数上限</view>
+      </view>
+      <view class="rule-item">
+        <view class="rule-num">2</view>
+        <view class="rule-text">其他玩家输入房间号加入</view>
+      </view>
+      <view class="rule-item">
+        <view class="rule-num">3</view>
+        <view class="rule-text">至少2人即可开始游戏</view>
+      </view>
+      <view class="rule-item">
+        <view class="rule-num">4</view>
+        <view class="rule-text">轮流抽取真心话或大冒险</view>
+      </view>
+    </view>
+  </view>
+
+  <cloud-tip-modal showTipProps="{{showTip}}" title="{{title}}" content="{{content}}"></cloud-tip-modal>
+</view>

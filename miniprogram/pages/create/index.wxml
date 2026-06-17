@@ -1,0 +1,36 @@
+<!-- create.wxml -->
+<view class="container">
+  <view class="form-item">
+    <view class="form-label">房间名称</view>
+    <input
+      class="form-input"
+      placeholder="输入房间名称（可选）"
+      value="{{roomName}}"
+      bindinput="onInputRoomName"
+    />
+  </view>
+
+  <view class="form-item">
+    <view class="form-label">最大人数</view>
+    <picker mode="selector" range="{{playerOptions}}" bindchange="onPickerChange">
+      <view class="form-picker">
+        {{maxPlayers}}人
+        <image class="picker-arrow" src="../../images/arrow.svg"></image>
+      </view>
+    </picker>
+  </view>
+
+  <view class="form-item">
+    <view class="form-label">游戏时长</view>
+    <picker mode="selector" range="{{durationLabels}}" value="{{durationIndex}}" bindchange="onDurationChange">
+      <view class="form-picker">
+        {{durationLabels[durationIndex]}}
+        <image class="picker-arrow" src="../../images/arrow.svg"></image>
+      </view>
+    </picker>
+  </view>
+
+  <button class="create-btn" bindtap="onCreateRoom" loading="{{isCreating}}">
+    创建房间
+  </button>
+</view>

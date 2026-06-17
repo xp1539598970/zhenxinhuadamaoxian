@@ -1,0 +1,121 @@
+<!-- room.wxml -->
+<view class="container">
+  <view class="room-header">
+    <view class="room-info">
+      <view class="room-name">{{roomName || "加载中..."}}</view>
+      <view class="room-code">房间号：{{roomCode || "----"}}</view>
+    </view>
+    <view class="room-status" wx:if="{{gameStatus === 'playing'}}">
+      <view class="status-dot"></view>
+      游戏进行中
+    </view>
+    <view class="countdown" wx:if="{{remainingTime !== null && gameStatus === 'playing'}}">
+      {{countdownText}}
+    </view>
+  </view>
+
+  <view class="players-section">
+    <view class="section-title">玩家列表</view>
+    <view class="players-grid">
+      <view
+        wx:for="{{players}}"
+        wx:key="_id"
+        class="player-card {{item.isOwner ? 'owner' : ''}} {{item.isCurrent ? 'current' : ''}}"
+      >
+        <image class="player-avatar" src="{{item.avatarUrl || '../../images/avatar.png'}}" mode="aspectFill"></image>
+        <view class="player-name">{{item.nickName}}</view>
+        <view class="player-tag" wx:if="{{item.isOwner}}">房主</view>
+        <view class="player-tag current-tag" wx:if="{{item.isCurrent}}">当前</view>
+      </view>
+    </view>
+    <view class="players-count">{{playerCount}}/{{maxPlayers}}人</view>
+  </view>
+
+  <view class="question-section" wx:if="{{gameStatus === 'playing' && currentQuestion}}">
+    <view class="question-header">
+      <view class="question-type {{currentQuestion.type === 'truth' ? 'truth' : 'dare'}}">
+        {{currentQuestion.type === 'truth' ? '真心话' : '大冒险'}}
+      </view>
+      <view class="question-difficulty" wx:if="{{!currentQuestion.isCustom}}">
+        {{currentQuestion.difficulty === 1 ? '简单' : currentQuestion.difficulty === 2 ? '中等' : '困难'}}
+      </view>
+      <view class="question-difficulty custom-tag" wx:if="{{currentQuestion.isCustom}}">
+        自定义
+      </view>
+    </view>
+    <view class="question-content">{{currentQuestion.content}}</view>
+    <view class="question-meta" wx:if="{{currentQuestion.isCustom}}">
+      <text>{{currentQuestion.fromPlayer}} 提问 {{currentQuestion.targetPlayer}}</text>
+    </view>
+    <view class="question-actions">
+      <button class="action-btn skip-btn" bindtap="onSkipQuestion">换一题</button>
+      <button class="action-btn ask-btn" bindtap="onShowAskModal">自定义提问</button>
+      <button class="action-btn next-btn" bindtap="onNextPlayer">下一位</button>
+    </view>
+  </view>
+
+  <view class="waiting-section" wx:if="{{gameStatus === 'waiting'}}">
+    <view class="waiting-icon"></view>
+    <view class="waiting-text">等待房主开始游戏...</view>
+  </view>
+
+  <view class="actions-section">
+    <button class="action-btn start-btn" wx:if="{{isOwner && gameStatus === 'waiting'}}" bindtap="onStartGame">
+      开始游戏
+    </button>
+    <button class="action-btn end-btn" wx:if="{{isOwner && gameStatus === 'playing'}}" bindtap="onEndGame">
+      结束游戏
+    </button>
+    <button class="action-btn share-btn" open-type="share">
+      分享房间
+    </button>
+    <button class="action-btn exit-btn" bindtap="onExitRoom">
+      退出房间
+    </button>
+  </view>
+
+  <!-- 自定义提问弹窗 -->
+  <view class="modal-mask" wx:if="{{showAskModal}}" bindtap="onHideAskModal">
+    <view class="modal-content" catchtap>
+      <view class="modal-title">自定义提问</view>
+
+      <view class="modal-section">
+        <view class="modal-label">选择类型</view>
+        <view class="type-selector">
+          <view class="type-option {{askType === 'truth' ? 'active-truth' : ''}}" bindtap="onAskTypeChange" data-type="truth">
+            真心话
+          </view>
+          <view class="type-option {{askType === 'dare' ? 'active-dare' : ''}}" bindtap="onAskTypeChange" data-type="dare">
+            大冒险
+          </view>
+        </view>
+      </view>
+
+      <view class="modal-section">
+        <view class="modal-label">选择目标玩家</view>
+        <picker mode="selector" range="{{players}}" range-key="nickName" value="{{askTargetIndex}}" bindchange="onAskTargetChange">
+          <view class="form-picker">
+            {{players[askTargetIndex].nickName || '请选择'}}
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="modal-section">
+        <view class="modal-label">输入问题</view>
+        <textarea
+          class="ask-textarea"
+          placeholder="请输入你想问的问题..."
+          value="{{askContent}}"
+          bindinput="onAskContentInput"
+          maxlength="100"
+        />
+      </view>
+
+      <view class="modal-actions">
+        <button class="modal-btn cancel-btn" bindtap="onHideAskModal">取消</button>
+        <button class="modal-btn submit-btn" bindtap="onSubmitCustomQuestion">提交</button>
+      </view>
+    </view>
+  </view>
+</view>

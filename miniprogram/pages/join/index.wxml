@@ -1,0 +1,18 @@
+<!-- join.wxml -->
+<view class="container">
+  <view class="code-section">
+    <view class="code-title">输入房间号</view>
+    <input
+      class="code-input-single"
+      type="number"
+      maxlength="6"
+      placeholder="请输入6位房间号"
+      value="{{roomCode}}"
+      bindinput="onInputRoomCode"
+    />
+  </view>
+
+  <button class="join-btn" bindtap="onJoinRoom" loading="{{isJoining}}">
+    加入房间
+  </button>
+</view>
