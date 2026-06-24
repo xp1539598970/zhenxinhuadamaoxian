@@ -1,5 +1,15 @@
 <!-- index.wxml -->
 <view class="container">
+  <!-- 用户信息栏 -->
+  <view class="user-bar">
+    <image
+      class="user-bar-avatar"
+      src="{{userInfo.avatarUrl || '/images/avatar.png'}}"
+      mode="aspectFill"
+    />
+    <view class="user-bar-name">{{userInfo.nickName || '微信用户'}}</view>
+  </view>
+
   <view class="logo-section">
     <image class="logo-image" src="../../images/hellokitty-logo.png" mode="aspectFit"></image>
     <view class="title">真心话大冒险</view>
@@ -14,7 +24,7 @@
     </button>
 
     <button class="main-btn join-btn" bindtap="onJoinRoom">
-      <view class="btn-icon">�</view>
+      <view class="btn-icon">🔑</view>
       <view class="btn-text">加入房间</view>
       <view class="btn-desc">输入房间号</view>
     </button>

@@ -327,6 +327,11 @@
   color: #FF69B4;
 }
 
+.screenshot-btn {
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+  color: #2E7D32;
+}
+
 .ask-btn {
   background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%);
   color: #FFFFFF;

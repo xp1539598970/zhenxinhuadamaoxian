@@ -1,0 +1,78 @@
+<!-- profile.wxml -->
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="user-avatar-wrapper">
+      <image
+        class="user-avatar"
+        src="{{userInfo.avatarUrl || '/images/avatar.png'}}"
+        mode="aspectFill"
+      />
+    </view>
+    <view class="user-info">
+      <view class="user-nickname">{{userInfo.nickName || '微信用户'}}</view>
+      <view class="user-openid" wx:if="{{openId}}">ID: {{openId}}</view>
+    </view>
+  </view>
+
+  <!-- 游戏记录 -->
+  <view class="section">
+    <view class="section-title">游戏记录</view>
+    <view class="section-content">
+      <view class="loading-hint" wx:if="{{isLoadingRecords}}">加载中...</view>
+      <view class="empty-hint" wx:elif="{{gameRecords.length === 0}}">暂无游戏记录</view>
+      <view
+        wx:for="{{gameRecords}}"
+        wx:key="_id"
+        class="record-item"
+      >
+        <view class="record-header">
+          <view class="record-room">房间 {{item.roomCode}}</view>
+          <view class="record-time">{{item.timeStr}}</view>
+        </view>
+        <view class="record-players">
+          <text wx:for="{{item.players}}" wx:for-item="player" wx:key="*this" wx:for-index="idx">
+            {{player}}{{idx < item.players.length - 1 ? '、' : ''}}
+          </text>
+        </view>
+        <view class="record-footer">
+          <view class="record-duration">时长: {{item.durationStr}}</view>
+          <view class="record-reason">
+            {{item.endReason === 'timeout' ? '时间到' : item.endReason === 'manual' ? '手动结束' : '已结束'}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游戏截图 -->
+  <view class="section">
+    <view class="section-title">游戏截图</view>
+    <view class="section-content">
+      <view class="loading-hint" wx:if="{{isLoadingScreenshots}}">加载中...</view>
+      <view class="empty-hint" wx:elif="{{screenshots.length === 0}}">暂无截图</view>
+      <view class="screenshot-grid" wx:else>
+        <image
+          wx:for="{{screenshots}}"
+          wx:key="_id"
+          class="screenshot-item"
+          src="{{item.tempUrl}}"
+          mode="aspectFill"
+          data-url="{{item.tempUrl}}"
+          bindtap="onPreviewImage"
+        />
+      </view>
+    </view>
+  </view>
+
+  <!-- 设置 -->
+  <view class="section">
+    <view class="section-title">设置</view>
+    <view class="section-content">
+      <view class="setting-item" bindtap="onClearCache">
+        <view class="setting-label">清除缓存</view>
+        <view class="setting-arrow">></view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -3,13 +3,36 @@
   min-height: 100vh;
   background: linear-gradient(180deg, #FFE4EC 0%, #FFF0F5 50%, #FFE4EC 100%);
   padding: 60rpx 40rpx;
+  padding-bottom: 120rpx;
+}
+
+/* 用户信息栏 */
+.user-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 20rpx;
+}
+
+.user-bar-avatar {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  border: 2rpx solid #FFB6C1;
+  margin-right: 12rpx;
+}
+
+.user-bar-name {
+  font-size: 26rpx;
+  color: #FF69B4;
+  font-weight: bold;
 }
 
 .logo-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 80rpx;
+  margin-top: 40rpx;
   margin-bottom: 80rpx;
 }
 

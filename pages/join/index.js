@@ -39,6 +39,7 @@ Page({
     }
 
     this.setData({ isJoining: true });
+    wx.showLoading({ title: "加入中..." });
 
     try {
       const res = await wx.cloud.callFunction({
@@ -50,17 +51,23 @@ Page({
         },
       });
 
-      if (res.result.success) {
+      wx.hideLoading();
+      if (res.result && res.result.success) {
+        wx.showToast({
+          title: "加入成功",
+          icon: "success",
+        });
         wx.navigateTo({
           url: "/pages/room/index?roomId=" + res.result.data.roomId,
         });
       } else {
         wx.showToast({
-          title: res.result.errMsg || "加入失败",
+          title: (res.result && res.result.errMsg) || "加入失败",
           icon: "none",
         });
       }
     } catch (e) {
+      wx.hideLoading();
       console.error("加入房间失败", e);
       wx.showToast({
         title: "加入失败，请重试",

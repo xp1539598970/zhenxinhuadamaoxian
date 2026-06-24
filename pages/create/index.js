@@ -54,6 +54,7 @@ Page({
     }
 
     this.setData({ isCreating: true });
+    wx.showLoading({ title: "创建中..." });
 
     try {
       const res = await wx.cloud.callFunction({
@@ -67,17 +68,23 @@ Page({
         },
       });
 
-      if (res.result.success) {
+      wx.hideLoading();
+      if (res.result && res.result.success) {
+        wx.showToast({
+          title: "创建成功",
+          icon: "success",
+        });
         wx.navigateTo({
           url: `/pages/room/index?roomId=${res.result.data.roomId}`,
         });
       } else {
         wx.showToast({
-          title: res.result.errMsg || "创建失败",
+          title: (res.result && res.result.errMsg) || "创建失败",
           icon: "none",
         });
       }
     } catch (e) {
+      wx.hideLoading();
       console.error("创建房间失败", e);
       wx.showToast({
         title: "创建失败，请重试",

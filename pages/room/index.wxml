@@ -138,6 +138,9 @@
     <button class="action-btn end-btn" wx:if="{{isOwner && gameStatus === 'playing'}}" bindtap="onEndGame">
       结束游戏
     </button>
+    <button class="action-btn screenshot-btn" wx:if="{{showScreenshotBtn && isOwner}}" bindtap="onChooseScreenshot" loading="{{isUploading}}">
+      📷 上传游戏截图
+    </button>
     <button class="action-btn share-btn" open-type="share">
       分享房间
     </button>

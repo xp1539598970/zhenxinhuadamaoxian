@@ -4,6 +4,7 @@ Page({
     showTip: false,
     title: "",
     content: "",
+    userInfo: null,
   },
 
   onLoad: function () {
@@ -14,6 +15,16 @@ Page({
         title: "环境未配置",
         content: "请在 app.js 中配置云环境 ID",
       });
+    }
+    if (app.globalData.userInfo) {
+      this.setData({ userInfo: app.globalData.userInfo });
+    }
+  },
+
+  onShow: function () {
+    const app = getApp();
+    if (app.globalData.userInfo) {
+      this.setData({ userInfo: app.globalData.userInfo });
     }
   },
 
@@ -27,5 +38,12 @@ Page({
     wx.navigateTo({
       url: "/pages/join/index",
     });
+  },
+
+  onShareAppMessage: function () {
+    return {
+      title: "真心话大冒险 - 聚会必备，快乐无限！",
+      path: "/pages/index/index",
+    };
   },
 });

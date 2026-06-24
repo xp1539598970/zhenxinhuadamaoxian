@@ -34,6 +34,9 @@ Page({
     typingPlayer: "",
     answerDisplayTime: "",
     typingTimer: null,
+    // 截图上传相关
+    isUploading: false,
+    showScreenshotBtn: false,
   },
 
   onLoad: function (options) {
@@ -148,14 +151,18 @@ Page({
 
         if (room.gameStatus === "ended" && !this.data.hasEnded) {
           this.setData({ hasEnded: true });
-          wx.showModal({
-            title: "房间已结束",
-            content: "房间已被房主解散或游戏已结束",
-            showCancel: false,
-            success: () => {
-              wx.navigateBack();
-            },
-          });
+          // 房主手动结束游戏后不弹窗，留在页面上传截图
+          // 非房主弹窗提示并返回
+          if (!this.data.isOwner) {
+            wx.showModal({
+              title: "房间已结束",
+              content: "房间已被房主解散或游戏已结束",
+              showCancel: false,
+              success: () => {
+                wx.navigateBack();
+              },
+            });
+          }
         }
       }
     } catch (e) {
@@ -287,6 +294,7 @@ Page({
       content: "确定要结束游戏吗？",
       success: async (modalRes) => {
         if (modalRes.confirm) {
+          wx.showLoading({ title: "结束中..." });
           try {
             const res = await wx.cloud.callFunction({
               name: "endGame",
@@ -295,26 +303,92 @@ Page({
               },
             });
 
-            if (res.result.success) {
+            if (res.result && res.result.success) {
+              wx.hideLoading();
               wx.showToast({
                 title: "游戏已结束",
                 icon: "success",
               });
-              setTimeout(() => {
-                wx.navigateBack();
-              }, 1500);
+              // 房主显示截图上传按钮
+              if (this.data.isOwner) {
+                this.setData({ showScreenshotBtn: true });
+              }
             } else {
+              wx.hideLoading();
               wx.showToast({
-                title: res.result.errMsg || "结束游戏失败",
+                title: (res.result && res.result.errMsg) || "结束游戏失败",
                 icon: "none",
               });
             }
           } catch (e) {
+            wx.hideLoading();
             console.error("结束游戏失败", e);
+            wx.showToast({
+              title: "结束失败，请重试",
+              icon: "none",
+            });
           }
         }
       },
     });
+  },
+
+  // ========== 截图上传功能 ==========
+
+  onChooseScreenshot: function () {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ["image"],
+      sourceType: ["album", "camera"],
+      sizeType: ["compressed"],
+      success: (res) => {
+        const tempFilePath = res.tempFiles[0].tempFilePath;
+        this.uploadScreenshot(tempFilePath);
+      },
+      fail: () => {
+        wx.showToast({ title: "选择图片失败", icon: "none" });
+      },
+    });
+  },
+
+  uploadScreenshot: async function (filePath) {
+    if (this.data.isUploading) return;
+    this.setData({ isUploading: true });
+    wx.showLoading({ title: "上传中..." });
+
+    try {
+      const fileID = `screenshots/${this.data.roomId}_${Date.now()}.jpg`;
+      const uploadRes = await wx.cloud.uploadFile({
+        cloudPath: fileID,
+        filePath,
+      });
+
+      const playerNames = this.data.players.map((p) => p.displayName || p.nickName || "玩家");
+
+      const saveRes = await wx.cloud.callFunction({
+        name: "uploadScreenshot",
+        data: {
+          fileID: uploadRes.fileID,
+          roomId: this.data.roomId,
+          roomCode: this.data.roomCode,
+          players: playerNames,
+        },
+      });
+
+      wx.hideLoading();
+      if (saveRes.result && saveRes.result.success) {
+        wx.showToast({ title: "截图保存成功", icon: "success" });
+        this.setData({ showScreenshotBtn: false });
+      } else {
+        wx.showToast({ title: "保存记录失败", icon: "none" });
+      }
+    } catch (e) {
+      wx.hideLoading();
+      console.error("截图上传失败", e);
+      wx.showToast({ title: "上传失败，请重试", icon: "none" });
+    } finally {
+      this.setData({ isUploading: false });
+    }
   },
 
   onExitRoom: async function () {
